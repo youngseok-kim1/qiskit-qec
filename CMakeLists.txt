@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.5)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
     message(FATAL_ERROR
@@ -38,7 +38,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Set compile flags
 
 if (NOT(MSVC))
-    set(ARCH_OPT "-O3" "-mno-avx2")
+    #set(ARCH_OPT "-O3" "-mno-avx2")
+    set(ARCH_OPT "-O3")
 else ()
     set(ARCH_OPT "-O2")
     # https://stackoverflow.com/a/8591946 (RTC1 incompatible with O2 flag)

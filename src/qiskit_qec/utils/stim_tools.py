@@ -27,6 +27,7 @@ from stim import target_rec as StimTarget_rec
 import numpy as np
 import rustworkx as rx
 
+import qiskit
 from qiskit import QuantumCircuit
 from qiskit_aer.noise.errors.base_quantum_error import QuantumChannelInstruction
 from qiskit_aer.noise import pauli_error
@@ -36,6 +37,11 @@ from qiskit_qec.utils.decoding_graph_attributes import (
 )
 from qiskit_qec.noise.paulinoisemodel import PauliNoiseModel
 
+from packaging.version import Version
+
+QISKIT_2 = Version(qiskit.__version__) >= Version('2.0.0')
+if QISKIT_2:
+    from qiskit.circuit import IfElseOp
 
 def get_stim_circuits(
     circuit: Union[QuantumCircuit, List],
@@ -174,7 +180,8 @@ def get_stim_circuits(
 
                     if qiskit_to_stim_dict[inst.name] == "TICK":  # barrier
                         stim_circuit.append("TICK")
-                    elif inst.condition is not None:  # handle c_ifs
+                    #elif inst.condition is not None:  # handle c_ifs
+                    elif not(QISKIT_2) and (inst.condition is not None): # handle c_ifs
                         if inst.name in "xyz":
                             if inst.condition[1] == 1:
                                 clbit = inst.condition[0]
@@ -198,6 +205,8 @@ def get_stim_circuits(
                             raise Exception(
                                 "Classically controlled " + inst.name + " gate is not supported"
                             )
+                    elif QISKIT_2 and isinstance(inst, IfElseOp):
+                        raise NotImplementedError("Haven't figure out how to convert IfElseOp in qiskit > 2.0 to Stim")
                     else:  # gates/measurements acting on qubits
                         stim_circuit.append(qiskit_to_stim_dict[inst.name], qubit_indices)
                 else:

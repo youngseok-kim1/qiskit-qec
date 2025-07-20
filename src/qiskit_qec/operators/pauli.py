@@ -22,7 +22,8 @@ from qiskit.circuit.library.standard_gates import IGate, XGate, YGate, ZGate
 from qiskit.exceptions import QiskitError
 from qiskit.quantum_info.operators.mixins import generate_apidocs
 from qiskit.quantum_info.operators.scalar_op import ScalarOp
-from qiskit.utils.deprecation import deprecate_function
+from qiskit_qec.utils.deprecation import deprecate_function
+#from qiskit.utils.deprecation import deprecate_func as deprecate_function
 
 from qiskit_qec.operators.base_pauli import BasePauli
 from qiskit_qec.utils import pauli_rep
